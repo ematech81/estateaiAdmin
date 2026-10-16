@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Hides the scrollbar on a horizontally-scrolling row (e.g. the blog's
+     filter tabs on mobile) while keeping it scrollable. */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Material Symbols font is loaded via a <link> tag in layout.tsx; this
+   keyframe backs the hero AI search bar's animated gradient border below. */
+@keyframes ai-gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/*
+ * Design system components — built from DESIGN.md ("Global Trust & Growth").
+ * These are the reusable building blocks every page should use instead of
+ * hand-picked Tailwind utilities, so the whole app stays visually consistent.
+ * Raw tokens (colors, type scale, radius, spacing, elevation) live in
+ * tailwind.config.ts; this layer composes them into named patterns.
+ */
+@layer components {
+  /* ---- Typography ---- */
+  /* Font-weight lives here (Tailwind's fontSize scale only carries size +
+     line-height + letter-spacing), so each class below is a complete style. */
+  .headline-xl {
+    @apply text-headline-xl font-bold;
+  }
+  .headline-lg {
+    @apply text-headline-lg font-semibold;
+  }
+  .headline-lg-mobile {
+    @apply text-headline-lg-mobile font-semibold;
+  }
+  .headline-md {
+    @apply text-headline-md font-semibold;
+  }
+  .body-lg {
+    @apply text-body-lg font-normal;
+  }
+  .body-md {
+    @apply text-body-md font-normal;
+  }
+  .label-md {
+    @apply text-label-md font-medium;
+  }
+  .label-sm {
+    @apply text-label-sm font-semibold;
+  }
+
+  /* ---- Layout ---- */
+  /* Fixed-grid outer container: 1280px max width, 24px gutter on desktop,
+     16px margin on mobile (Layout & Spacing). */
+  .container-app {
+    @apply mx-auto w-full max-w-container-max px-margin-mobile md:px-gutter;
+  }
+
+  /* ---- Elevation (Level 1) ---- */
+  /* Standalone convenience class — apply directly in className, don't nest
+     inside another @apply (Tailwind variants like hover: won't resolve
+     custom component classes reliably). Level 2 hover/active state is
+     applied directly as `hover:shadow-elevation-2` where needed instead. */
+  .elevation-1 {
+    @apply border border-border-gray-200 bg-surface-container-lowest;
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded px-4 py-2.5 text-label-md font-medium transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50;
+  }
+  /* Primary: Trust Blue background, white text — high-contrast and decisive. */
+  .btn-primary {
+    @apply btn bg-trust-blue-900 text-on-primary hover:bg-trust-blue-900/90;
+  }
+  /* Secondary: Growth Emerald — "Contact Agent" / verified actions. */
+  .btn-secondary {
+    @apply btn bg-growth-emerald-500 text-white hover:bg-growth-emerald-500/90;
+  }
+  /* Tertiary: outline style — secondary search filters. */
+  .btn-tertiary {
+    @apply btn border border-outline bg-transparent text-on-surface hover:bg-surface-container-low;
+  }
+
+  /* ---- Inputs ---- */
+  /* Standard: 1px border, 2px Trust Blue border on focus. */
+  .input-standard {
+    @apply w-full rounded border border-border-gray-200 bg-surface-container-lowest px-3 py-2 text-body-md text-on-surface placeholder:text-on-surface-variant focus:border-2 focus:border-trust-blue-900 focus:outline-none;
+  }
+  /* AI natural-language input: larger (18px/body-lg), rounded-xl, glows
+     rather than hard-shadows on focus to read as the "AI-powered" field. */
+  .ai-search-input {
+    @apply w-full rounded-xl border border-border-gray-200 bg-surface-container-lowest px-4 py-3 text-body-lg text-on-surface placeholder:text-on-surface-variant focus:shadow-ai-glow focus:outline-none;
+  }
+
+  /* ---- Cards ---- */
+  /* Property card: white surface, 1px border, 8px radius, soft ambient
+     shadow on hover — Elevation Level 1 -> Level 2. */
+  .card-property {
+    @apply overflow-hidden rounded-lg border border-border-gray-200 bg-surface-container-lowest transition-shadow duration-150 hover:shadow-elevation-2;
+  }
+
+  /* ---- Badges / status pills ---- */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-label-sm font-semibold;
+  }
+  /* Verified: emerald checkmark + text on a light pill. */
+  .badge-verified {
+    @apply badge border border-border-gray-200 bg-surface-container-lowest text-secondary;
+  }
+  /* Match score: solid dark pill (e.g. "98% Match" on a card image). */
+  .badge-match {
+    @apply badge bg-trust-blue-900 text-on-primary;
+  }
+  /* Pending: neutral / slate. */
+  .badge-pending {
+    @apply badge bg-surface-container text-on-surface-variant;
+  }
+  /* Action required: deep blue, high-contrast text. */
+  .badge-action {
+    @apply badge bg-trust-blue-900 text-inverse-on-surface;
+  }
+  /* International: neutral slate tag for a listing outside Nigeria
+     (location.country !== 'Nigeria' — see components/property/PropertyCard.tsx). */
+  .badge-international {
+    @apply badge bg-surface-container text-on-surface-variant;
+  }
+
+  /* ---- Icons ---- */
+  /* Material Symbols baseline — font itself is loaded via <link> in
+     layout.tsx. Add style="font-variation-settings: 'FILL' 1" per-icon to
+     switch a specific icon to its filled variant (e.g. the logo mark). */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
+  /* ---- Hero AI search ---- */
+  /* Animated gradient border marking the hero search bar as the AI-powered
+     entry point, distinct from the standard filter buttons beside it
+     (DESIGN.md: "subtle gradient border to indicate this isn't a standard
+     filter search"). Wrap an .ai-hero-search-inner around the actual
+     icon+input+button row. */
+  .ai-hero-search {
+    position: relative;
+    border-radius: theme('borderRadius.lg');
+    padding: 2px;
+    background: linear-gradient(
+      to right,
+      theme('colors.trust-blue-900'),
+      theme('colors.growth-emerald-500'),
+      theme('colors.trust-blue-900')
+    );
+    background-size: 200% 200%;
+    animation: ai-gradient-move 3s ease infinite;
+    box-shadow: theme('boxShadow.elevation-2');
+  }
+  .ai-hero-search-inner {
+    @apply relative flex items-center rounded-lg bg-surface-container-lowest;
+  }
+
+  /* ---- AI-processing card glow ---- */
+  /* Ambient (not focus-only) version of the AI glow, for a card-level
+     surface that's entirely AI-driven (e.g. the natural-language listing
+     extraction step) rather than a single input. Intensifies on
+     focus-within so typing inside it reads as "live". */
+  .card-ai-glow {
+    box-shadow: 0 0 20px rgb(16 185 129 / 0.15);
+    transition: box-shadow 0.3s ease;
+  }
+  .card-ai-glow:focus-within {
+    box-shadow: 0 0 30px rgb(16 185 129 / 0.3);
+  }
+
+  /* ---- Blog post body ---- */
+  /* Hand-written rather than pulling in @tailwindcss/typography (not an
+     installed dependency) — react-markdown's raw <h1>/<p>/<ul>/etc. output
+     needs *some* styling since Tailwind's preflight strips all browser
+     defaults; this uses the app's own tokens so a post reads like the rest
+     of EstateAI instead of a generic plugin's look. */
+  .markdown-body {
+    @apply text-body-md text-on-surface;
+  }
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3 {
+    @apply mb-4 mt-8 font-bold text-trust-blue-900;
+  }
+  .markdown-body h1 {
+    @apply text-headline-md;
+  }
+  .markdown-body h2 {
+    @apply text-body-lg;
+  }
+  .markdown-body h3 {
+    @apply text-body-md;
+  }
+  .markdown-body p {
+    @apply mb-4 leading-relaxed;
+  }
+  .markdown-body ul {
+    @apply mb-4 list-disc space-y-1 pl-6;
+  }
+  .markdown-body ol {
+    @apply mb-4 list-decimal space-y-1 pl-6;
+  }
+  .markdown-body a {
+    @apply text-trust-blue-900 underline underline-offset-2 hover:text-growth-emerald-500;
+  }
+  .markdown-body blockquote {
+    @apply my-8 rounded-r-lg border-l-4 border-growth-emerald-500 bg-surface-gray-50 p-6 text-body-lg italic text-trust-blue-900 shadow-sm;
+  }
+  .markdown-body blockquote p {
+    @apply mb-0;
+  }
+  .markdown-body code {
+    @apply rounded bg-surface-container-low px-1.5 py-0.5 text-label-sm;
+  }
+  .markdown-body pre {
+    @apply mb-4 overflow-x-auto rounded-lg bg-surface-container-low p-4;
+  }
+  .markdown-body pre code {
+    @apply bg-transparent p-0;
+  }
+  .markdown-body img {
+    @apply my-4 rounded-lg;
+  }
+  .markdown-body hr {
+    @apply my-8 border-border-gray-200;
+  }
+}
